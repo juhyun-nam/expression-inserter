@@ -8,3 +8,7 @@
 [![codecov](https://codecov.io/gh/juhyun-nam/expression-inserter/branch/master/graph/badge.svg)](https://codecov.io/gh/juhyun-nam/expression-inserter)
 
 ## 목적
+
+SQL-like expression을 사용해서 container에 값을 넣는 helper function.
+
+## The Gist
