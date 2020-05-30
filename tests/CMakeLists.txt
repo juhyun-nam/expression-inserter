@@ -1,4 +1,4 @@
-add_executable(expression_inserter_test vector_test.cc)
+add_executable(expression_inserter_test basic_test.cc)
 
 target_compile_options(expression_inserter_test PRIVATE -O0 -g --coverage)
 
