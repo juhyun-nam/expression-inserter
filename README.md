@@ -9,6 +9,20 @@
 
 ## 목적
 
-SQL-like expression을 사용해서 container에 값을 넣는 helper function.
+여러 expression을 사용해서 container에 값을 넣는 helper function.
 
 ## The Gist
+
+```cpp
+  std::vector<int> vector;
+
+  Insert(vector).Values({1, 1, 1, 1});
+  Insert(vector).Values(1).Times(5);
+  Insert(vector).Values({1, 2, 3, 4, 5}).Times(10);
+
+  Insert(vector).Select(LEVEL + 5).Until(5);
+  Insert(vector).Select(LEVEL % 2).Until(100).Where(LEVEL % 2 != 1);
+
+  std::vector<int> source(100);
+  Insert(vector).Select(ELEMENT).From(source).Where(ELEMENT % 4 == 0);
+```

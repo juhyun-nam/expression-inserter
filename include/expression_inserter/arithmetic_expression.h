@@ -8,64 +8,59 @@
 
 #include <cassert>
 #include <functional>
+#include "expression_inserter/value_type.h"
 
 namespace detail {
 
-/// LEVEL과 int의 arithmetic operation 동작을 담는 구조체
-struct Arith {
-  Arith() {
-    expr = [](int v) { return v; };
-  }
-  explicit Arith(std::function<int(int)> fn) : expr(fn) {}
-  std::function<int(int)> expr;
-};
-
-// arithmetic
-inline Arith operator-(Arith e) {
-  return Arith([e](int v) { return -e.expr(v); });
+//// 여러 예측하기 힘든 표현식이 많고, upper bound 조건을 확인 하기 힘들어서
+/// (-)표현식은 지원하지 않는다 cf. Where (-LEVEL < 1000)
+/*
+inline Value operator-(Value e) {
+  return Value([e](int v) { return -e(v); });
 }
-inline Arith operator+(Arith e, int a) {
-  return Arith([e, a](int v) { return e.expr(v) + a; });
+*/
+inline Value operator+(Value e, int a) {
+  return Value([e, a](int v) { return e(v) + a; });
 }
-inline Arith operator+(int a, Arith e) {
-  return Arith([a, e](int v) { return a + e.expr(v); });
+inline Value operator+(int a, Value e) {
+  return Value([a, e](int v) { return a + e(v); });
 }
-inline Arith operator-(Arith e, int a) {
-  return Arith([e, a](int v) { return e.expr(v) - a; });
+inline Value operator-(Value e, int a) {
+  return Value([e, a](int v) { return e(v) - a; });
 }
-inline Arith operator-(int a, Arith e) {
-  return Arith([a, e](int v) { return a - e.expr(v); });
+inline Value operator-(int a, Value e) {
+  return Value([a, e](int v) { return a - e(v); });
 }
-inline Arith operator*(Arith e, int a) {
-  return Arith([e, a](int v) { return e.expr(v) * a; });
+inline Value operator*(Value e, int a) {
+  return Value([e, a](int v) { return e(v) * a; });
 }
-inline Arith operator*(int a, Arith e) {
-  return Arith([a, e](int v) { return a * e.expr(v); });
+inline Value operator*(int a, Value e) {
+  return Value([a, e](int v) { return a * e(v); });
 }
-inline Arith operator%(Arith e, int a) {
-  return Arith([e, a](int v) {
-    assert(!a);
-    return e.expr(v) % a;
+inline Value operator%(Value e, int a) {
+  return Value([e, a](int v) {
+    assert(a);
+    return e(v) % a;
   });
 }
-inline Arith operator%(int a, Arith e) {
-  return Arith([a, e](int v) {
-    int ev = e.expr(v);
-    assert(!ev);
+inline Value operator%(int a, Value e) {
+  return Value([a, e](int v) {
+    int ev = e(v);
+    assert(ev);
     return a % ev;
   });
 }
-inline Arith operator/(int a, Arith e) {
-  return Arith([a, e](int v) {
-    int ev = e.expr(v);
-    assert(!ev);
+inline Value operator/(int a, Value e) {
+  return Value([a, e](int v) {
+    int ev = e(v);
+    assert(ev);
     return a / ev;
   });
 }
-inline Arith operator/(Arith e, int a) {
-  return Arith([e, a](int v) {
-    assert(!a);
-    return e.expr(v) / a;
+inline Value operator/(Value e, int a) {
+  return Value([e, a](int v) {
+    assert(a);
+    return e(v) / a;
   });
 }
 
